@@ -34,17 +34,17 @@ export const GOVERNANCE_ADDRESS = '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F'
 
 export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
 
-const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
-export const UNI: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+const SAFEEARTH_ADDRESS = '0xE6F1966d04CfcB9cd1B1dC4E8256D8b501b11CbA'
+export const SAFEEARTH: { [chainId in ChainId]: Token } = {
+    [ChainId.MAINNET]: new Token(ChainId.MAINNET, SAFEEARTH_ADDRESS, 9, 'SAFEEARTH', 'SafeEarth'),
+    [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x0000000000000000000000000000000000000000', 9, 'SAFEEARTH', 'SafeEarth'),
+    [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x0000000000000000000000000000000000000000', 9, 'SAFEEARTH', 'SafeEarth'),
+    [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x0000000000000000000000000000000000000000', 9, 'SAFEEARTH', 'SafeEarth'),
+    [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x0000000000000000000000000000000000000000', 9, 'SAFEEARTH', 'SafeEarth'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
-  [UNI_ADDRESS]: 'UNI',
+  [SAFEEARTH_ADDRESS]: 'SAFEEARTH',
   [GOVERNANCE_ADDRESS]: 'Governance',
   [TIMELOCK_ADDRESS]: 'Timelock'
 }
@@ -70,8 +70,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap')],
-    '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap')],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
     [FRAX.address]: [FXS],
@@ -193,7 +191,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 export const NetworkContextName = 'NETWORK'
 
 // default allowed slippage, in bips
-export const INITIAL_ALLOWED_SLIPPAGE = 50
+export const INITIAL_ALLOWED_SLIPPAGE = 500
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 

@@ -247,15 +247,18 @@ function validatedRecipient(recipient: any): string | null {
 }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
-  if (inputCurrency === outputCurrency) {
-    if (typeof parsedQs.outputCurrency === 'string') {
-      inputCurrency = ''
-    } else {
-      outputCurrency = ''
+    let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
+    let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
+      if (inputCurrency === outputCurrency && outputCurrency === 'ETH') {
+          outputCurrency = "0xE6F1966d04CfcB9cd1B1dC4E8256D8b501b11CbA"
+      }
+    if (inputCurrency === outputCurrency) {
+      if (typeof parsedQs.outputCurrency === 'string') {
+        inputCurrency = ''
+      } else {
+        outputCurrency = ''
+      }
     }
-  }
 
   const recipient = validatedRecipient(parsedQs.recipient)
 

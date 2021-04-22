@@ -1,12 +1,11 @@
 import { transparentize } from 'polished'
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
   DefaultTheme
 } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
@@ -48,9 +47,9 @@ export function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
+    bg1: darkMode ? '#1e262f' : '#FFFFFF',
+    bg2: darkMode ? '#10161c' : '#F7F8FA',
+    bg3: darkMode ? 'rgba(15, 21, 22, 0.3)' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
 
@@ -59,14 +58,14 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
+    primary1: darkMode ? '#66cc66' : '#ff007a',
     primary2: darkMode ? '#3680E7' : '#FF8CC3',
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary4: darkMode ? '#62D9A570' : '#F6DDE8',
+    primary5: darkMode ? '#62D9A570' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#62D9A5' : '#ff007a',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -117,9 +116,7 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
-
-  const themeObject = useMemo(() => theme(darkMode), [darkMode])
+  const themeObject = theme(true)
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
@@ -194,7 +191,7 @@ body {
 }
 
  a {
-   color: ${colors(false).blue1}; 
+   color: ${colors(false).blue1};
  }
 
 * {
@@ -212,7 +209,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
-  
+
 }
 `
 

@@ -299,10 +299,14 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
+    const tokenWarning: boolean = useMemo(() => {
+        return !!urlLoadedTokens.filter((c): c is Token => c.symbol !== "SAFEEARTH" && c.symbol !== "ETH").length
+    }, [urlLoadedTokens])
+
   return (
     <>
       <TokenWarningModal
-        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        isOpen={tokenWarning && !dismissTokenWarning}
         tokens={importTokensNotInDefault}
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}

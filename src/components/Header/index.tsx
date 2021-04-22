@@ -1,4 +1,4 @@
-import { ChainId, TokenAmount } from '@uniswap/sdk'
+import { ChainId, TokenAmount, Token } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -7,26 +7,17 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances, useAggregateUniBalance } from '../../state/wallet/hooks'
-import { CardNoise } from '../earn/styled'
+import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { CountUp } from 'use-count-up'
 import { TYPE, ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
-import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
-import ClaimModal from '../claim/ClaimModal'
-import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
-import { useUserHasAvailableClaim } from '../../state/claim/hooks'
-import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
@@ -118,7 +109,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -135,7 +126,7 @@ const UNIAmount = styled(AccountElement)`
   height: 36px;
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #00F260 0%, #0575E6 100%), #edeef2;
 `
 
 const UNIWrapper = styled.span`
@@ -192,9 +183,12 @@ const Title = styled.a`
 `
 
 const UniIcon = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-5deg);
+    transform: rotate(5deg);
   }
 `
 
@@ -297,35 +291,26 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
+  const safeEarthToken = new Token(ChainId.MAINNET, '0xE6F1966d04CfcB9cd1B1dC4E8256D8b501b11CbA', 9, 'SAFEEARTH', 'SafeEarth')
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  // const [isDark] = useDarkModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
-  const toggleClaimModal = useToggleSelfClaimModal()
-
-  const availableClaim: boolean = useUserHasAvailableClaim(account)
-
-  const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
-
-  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
+  const safeearthBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, safeEarthToken)
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
-  const showClaimPopup = useShowClaimPopup()
 
-  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
+  const countUpValue = safeearthBalance?.toFixed(0) ?? '0'
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
     <HeaderFrame>
-      <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+            <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
@@ -345,13 +330,7 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
-          </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://www.dextools.io/app/uniswap/pair-explorer/0xba6bd00cf4d8a6b182ebd762660151fd34c675aa'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>
@@ -363,19 +342,9 @@ export default function Header() {
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
-          {availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? <Dots>Claiming UNI</Dots> : 'Claim UNI'}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )}
-          {!availableClaim && aggregateBalance && (
+          {safeearthBalance && (
             <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+              <UNIAmount active={!!account} style={{ pointerEvents: 'auto' }}>
                 {account && (
                   <HideSmall>
                     <TYPE.white
@@ -394,9 +363,8 @@ export default function Header() {
                     </TYPE.white>
                   </HideSmall>
                 )}
-                UNI
+                SAFEEARTH
               </UNIAmount>
-              <CardNoise />
             </UNIWrapper>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
@@ -409,9 +377,6 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

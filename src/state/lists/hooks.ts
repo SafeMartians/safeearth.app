@@ -1,5 +1,5 @@
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
+import DEFAULT_TOKEN_LIST from '../../defaultTokenList/index.json'
 import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
@@ -156,6 +156,7 @@ export function useCombinedInactiveList(): TokenAddressMap {
 
 // used to hide warnings on import for default tokens
 export function useDefaultTokenList(): TokenAddressMap {
+    console.log(DEFAULT_TOKEN_LIST)
   return listToTokenMap(DEFAULT_TOKEN_LIST)
 }
 
